@@ -2,6 +2,8 @@
 
 A beautiful, animated birthday celebration website featuring stunning chocolate and flower galleries with real photos and dynamic effects.
 
+> **🌐 Live Site**: [https://reddisekharyadav.github.io/-Interactive-Birthday-Website/](https://reddisekharyadav.github.io/-Interactive-Birthday-Website/)
+
 ## ✨ Features
 
 - **Interactive Multi-Page Experience**: Welcome page, chocolate gallery, and flower gallery
