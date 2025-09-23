@@ -54,11 +54,15 @@ A beautiful, animated birthday celebration website featuring stunning chocolate 
 
 ## 🔧 How to Use
 
-1. Open `birthday_website.html` in any modern web browser
+1. Open `index.html` in any modern web browser (or visit the live GitHub Pages site)
 2. Navigate through the pages using the buttons
 3. Enjoy the chocolate and flower galleries with interactive effects
 4. Perfect for sharing birthday wishes with beautiful visuals!
 
+## 🌐 Live Demo
+
+Visit the live site at: [https://reddisekharyadav.github.io/-Interactive-Birthday-Website/](https://reddisekharyadav.github.io/-Interactive-Birthday-Website/)
+
 ---
 
-*Created with love for special birthday celebrations! 🎉*
+### Created with love for special birthday celebrations! 🎉
