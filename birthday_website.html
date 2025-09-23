@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Pandu! 🎉</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000033;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 1s ease-in-out;
+            z-index: 10;
+        }
+
+        .page.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .page.prev {
+            transform: translateX(-100%);
+        }
+
+        /* Page 1 - Birthday Greeting */
+        .page1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .birthday-title {
+            font-size: 4rem;
+            color: white;
+            text-shadow: 0 0 30px rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+            font-weight: bold;
+        }
+
+        @keyframes titleGlow {
+            from { 
+                text-shadow: 0 0 30px rgba(255,255,255,0.8), 0 0 60px rgba(255,182,193,0.6);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 40px rgba(255,255,255,1), 0 0 80px rgba(255,182,193,0.9);
+                transform: scale(1.05);
+            }
+        }
+
+        .surprise-btn {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 3rem;
+            box-shadow: 0 15px 40px rgba(255,107,157,0.4);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            animation: buttonPulse 2s infinite;
+        }
+
+        @keyframes buttonPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .surprise-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 20px 50px rgba(255,107,157,0.6);
+        }
+
+        /* Page 2 - Chocolates */
+        .page2 {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #F4A460 100%);
+            padding: 2rem;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+            margin-bottom: 3rem;
+            font-weight: bold;
+        }
+
+        .chocolates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin-bottom: 3rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 1rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+        }
+
+        .chocolate {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 5px 15px rgba(139,69,19,0.2);
+            animation: chocolateFloat 4s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: all 0.4s ease;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .chocolate:hover {
+            transform: translateY(-10px) scale(1.1) rotate(5deg);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5), 0 10px 25px rgba(139,69,19,0.4);
+            border-color: rgba(255,255,255,0.3);
+            filter: brightness(1.2) saturate(1.3);
+        }
+
+        .chocolate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 30%, rgba(0,0,0,0.1) 100%);
+            border-radius: 22px;
+            transition: opacity 0.3s ease;
+        }
+
+        .chocolate:hover::before {
+            opacity: 0.8;
+        }
+
+        .chocolate::after {
+            content: attr(data-name);
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .chocolate:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .chocolate:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=200&h=200&fit=crop'); animation-delay: -0.1s; }
+        .chocolate:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1511381939415-e44015466834?w=200&h=200&fit=crop'); animation-delay: -0.2s; }
+        .chocolate:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop'); animation-delay: -0.3s; }
+        .chocolate:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&h=200&fit=crop'); animation-delay: -0.4s; }
+        .chocolate:nth-child(5) { background-image: url('https://images.unsplash.com/photo-1571197200842-74e4011d5a58?w=200&h=200&fit=crop'); animation-delay: -0.5s; }
+        .chocolate:nth-child(6) { background-image: url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=200&h=200&fit=crop'); animation-delay: -0.6s; }
+        .chocolate:nth-child(7) { background-image: url('https://images.unsplash.com/photo-1540337706094-da10342c93d8?w=200&h=200&fit=crop'); animation-delay: -0.7s; }
+        .chocolate:nth-child(8) { background-image: url('https://images.unsplash.com/photo-1548907040-4baa42d10919?w=200&h=200&fit=crop'); animation-delay: -0.8s; }
+        .chocolate:nth-child(9) { background-image: url('https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=200&h=200&fit=crop'); animation-delay: -0.9s; }
+        .chocolate:nth-child(10) { background-image: url('https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=200&h=200&fit=crop'); animation-delay: -1.0s; }
+        .chocolate:nth-child(11) { background-image: url('https://images.unsplash.com/photo-1582440572235-9a31b8dc2839?w=200&h=200&fit=crop'); animation-delay: -1.1s; }
+        .chocolate:nth-child(12) { background-image: url('https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=200&h=200&fit=crop'); animation-delay: -1.2s; }
+        .chocolate:nth-child(13) { background-image: url('https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=200&h=200&fit=crop'); animation-delay: -1.3s; }
+        .chocolate:nth-child(14) { background-image: url('https://images.unsplash.com/photo-1511909679491-5f3ad5ee3814?w=200&h=200&fit=crop'); animation-delay: -1.4s; }
+        .chocolate:nth-child(15) { background-image: url('https://images.unsplash.com/photo-1526081715791-7c538e595d17?w=200&h=200&fit=crop'); animation-delay: -1.5s; }
+        .chocolate:nth-child(16) { background-image: url('https://images.unsplash.com/photo-1537609557441-4ae4e222e23b?w=200&h=200&fit=crop'); animation-delay: -1.6s; }
+        .chocolate:nth-child(17) { background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=200&h=200&fit=crop'); animation-delay: -1.7s; }
+        .chocolate:nth-child(18) { background-image: url('https://images.unsplash.com/photo-1602721803623-00e43fd298b0?w=200&h=200&fit=crop'); animation-delay: -1.8s; }
+        .chocolate:nth-child(19) { background-image: url('https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200&h=200&fit=crop'); animation-delay: -1.9s; }
+        .chocolate:nth-child(20) { background-image: url('https://images.unsplash.com/photo-1525013785570-b46cfbb01e64?w=200&h=200&fit=crop'); animation-delay: -2.0s; }
+        
+        /* More individual chocolate images for better variety */
+        .chocolate:nth-child(21) { background-image: url('https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=200&h=200&fit=crop'); animation-delay: -2.1s; }
+        .chocolate:nth-child(22) { background-image: url('https://images.unsplash.com/photo-1495147466023-ac5c588e2e94?w=200&h=200&fit=crop'); animation-delay: -2.2s; }
+        .chocolate:nth-child(23) { background-image: url('https://images.unsplash.com/photo-1582736010021-ba85d8166b3e?w=200&h=200&fit=crop'); animation-delay: -2.3s; }
+        .chocolate:nth-child(24) { background-image: url('https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=200&h=200&fit=crop'); animation-delay: -2.4s; }
+        .chocolate:nth-child(25) { background-image: url('https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?w=200&h=200&fit=crop'); animation-delay: -2.5s; }
+        .chocolate:nth-child(26) { background-image: url('https://images.unsplash.com/photo-1564149504826-7b86a058b96d?w=200&h=200&fit=crop'); animation-delay: -2.6s; }
+        .chocolate:nth-child(27) { background-image: url('https://images.unsplash.com/photo-1561155302-ca4db78b0eac?w=200&h=200&fit=crop'); animation-delay: -2.7s; }
+        .chocolate:nth-child(28) { background-image: url('https://images.unsplash.com/photo-1527235259566-1d1ee2c52e23?w=200&h=200&fit=crop'); animation-delay: -2.8s; }
+        .chocolate:nth-child(29) { background-image: url('https://images.unsplash.com/photo-1511381939415-e44015466834?w=200&h=200&fit=crop'); filter: hue-rotate(30deg); animation-delay: -2.9s; }
+        .chocolate:nth-child(30) { background-image: url('https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=200&h=200&fit=crop'); filter: sepia(0.5); animation-delay: -3.0s; }
+        .chocolate:nth-child(31) { background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop'); filter: saturate(1.5); animation-delay: -3.1s; }
+        .chocolate:nth-child(32) { background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&h=200&fit=crop'); filter: brightness(1.2); animation-delay: -3.2s; }
+        .chocolate:nth-child(33) { background-image: url('https://images.unsplash.com/photo-1571197200842-74e4011d5a58?w=200&h=200&fit=crop'); filter: hue-rotate(60deg); animation-delay: -3.3s; }
+        .chocolate:nth-child(34) { background-image: url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=200&h=200&fit=crop'); filter: contrast(1.3); animation-delay: -3.4s; }
+        .chocolate:nth-child(35) { background-image: url('https://images.unsplash.com/photo-1540337706094-da10342c93d8?w=200&h=200&fit=crop'); filter: hue-rotate(90deg); animation-delay: -3.5s; }
+        
+        /* Pattern-based styles for remaining chocolates (36-98) */
+        .chocolate:nth-child(n+36) { 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        /* Cycle through 6 base images with different filters */
+        .chocolate:nth-child(6n+0):nth-child(n+36) { 
+            background-image: url('https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=200&h=200&fit=crop'); 
+        }
+        .chocolate:nth-child(6n+1):nth-child(n+36) { 
+            background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop'); 
+        }
+        .chocolate:nth-child(6n+2):nth-child(n+36) { 
+            background-image: url('https://images.unsplash.com/photo-1571197200842-74e4011d5a58?w=200&h=200&fit=crop'); 
+        }
+        .chocolate:nth-child(6n+3):nth-child(n+36) { 
+            background-image: url('https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=200&h=200&fit=crop'); 
+        }
+        .chocolate:nth-child(6n+4):nth-child(n+36) { 
+            background-image: url('https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=200&h=200&fit=crop'); 
+        }
+        .chocolate:nth-child(6n+5):nth-child(n+36) { 
+            background-image: url('https://images.unsplash.com/photo-1511381939415-e44015466834?w=200&h=200&fit=crop'); 
+        }
+        
+        /* Apply different filters in groups of 8 to create more variety */
+        .chocolate:nth-child(8n+0):nth-child(n+36) { filter: hue-rotate(0deg) saturate(1.1); }
+        .chocolate:nth-child(8n+1):nth-child(n+36) { filter: hue-rotate(45deg) brightness(1.1); }
+        .chocolate:nth-child(8n+2):nth-child(n+36) { filter: hue-rotate(90deg) saturate(1.3); }
+        .chocolate:nth-child(8n+3):nth-child(n+36) { filter: hue-rotate(135deg) sepia(0.3); }
+        .chocolate:nth-child(8n+4):nth-child(n+36) { filter: hue-rotate(180deg) contrast(1.2); }
+        .chocolate:nth-child(8n+5):nth-child(n+36) { filter: hue-rotate(225deg) brightness(1.2); }
+        .chocolate:nth-child(8n+6):nth-child(n+36) { filter: hue-rotate(270deg) saturate(1.4); }
+        .chocolate:nth-child(8n+7):nth-child(n+36) { filter: hue-rotate(315deg) sepia(0.2); }
+
+        @keyframes chocolateFloat {
+            0%, 100% { 
+                transform: translateY(0px) rotate(0deg) scale(1); 
+                filter: hue-rotate(0deg);
+            }
+            25% { 
+                transform: translateY(-15px) rotate(2deg) scale(1.05); 
+                filter: hue-rotate(5deg);
+            }
+            50% { 
+                transform: translateY(-25px) rotate(0deg) scale(1.1); 
+                filter: hue-rotate(10deg);
+            }
+            75% { 
+                transform: translateY(-15px) rotate(-2deg) scale(1.05); 
+                filter: hue-rotate(5deg);
+            }
+        }
+
+        /* Page 3 - Flowers */
+        .page3 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .page3::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="petals" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="3" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23petals)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .flowers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin-bottom: 3rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 1rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .flower {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            animation: flowerSway 4s ease-in-out infinite;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2), 0 0 0 3px rgba(255,255,255,0.1);
+            transition: all 0.4s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .flower:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 8px rgba(255,255,255,0.3), 0 0 40px rgba(255,182,193,0.6);
+            filter: brightness(1.3) saturate(1.4) contrast(1.1);
+        }
+
+        .flower::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 50%, rgba(0,0,0,0.1) 100%);
+            transition: opacity 0.3s ease;
+        }
+
+        .flower:hover::before {
+            opacity: 0.7;
+        }
+
+        .flower::after {
+            content: attr(data-flower);
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 5px 10px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .flower:hover::after {
+            opacity: 1;
+            bottom: -30px;
+        }
+
+        .flower:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop'); animation-delay: -0.1s; }
+        .flower:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=200&fit=crop'); animation-delay: -0.2s; }
+        .flower:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1597848212624-e8bb3d0d6e5f?w=200&h=200&fit=crop'); animation-delay: -0.3s; }
+        .flower:nth-child(4) { background-image: url('https://images.unsplash.com/photo-1463320726281-696a485928c7?w=200&h=200&fit=crop'); animation-delay: -0.4s; }
+        .flower:nth-child(5) { background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=200&h=200&fit=crop'); animation-delay: -0.5s; }
+        .flower:nth-child(6) { background-image: url('https://images.unsplash.com/photo-1582794543139-8ac9cb0f7b11?w=200&h=200&fit=crop'); animation-delay: -0.6s; }
+        .flower:nth-child(7) { background-image: url('https://images.unsplash.com/photo-1496062031456-07b8f162a322?w=200&h=200&fit=crop'); animation-delay: -0.7s; }
+        .flower:nth-child(8) { background-image: url('https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=200&h=200&fit=crop'); animation-delay: -0.8s; }
+        .flower:nth-child(9) { background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=200&h=200&fit=crop'); animation-delay: -0.9s; }
+        .flower:nth-child(10) { background-image: url('https://images.unsplash.com/photo-1470509037663-253afd7f0f51?w=200&h=200&fit=crop'); animation-delay: -1.0s; }
+        .flower:nth-child(11) { background-image: url('https://images.unsplash.com/photo-1429225490636-d1ef5b7fe517?w=200&h=200&fit=crop'); animation-delay: -1.1s; }
+        .flower:nth-child(12) { background-image: url('https://images.unsplash.com/photo-1471287174611-b308fd4d8ce8?w=200&h=200&fit=crop'); animation-delay: -1.2s; }
+        .flower:nth-child(13) { background-image: url('https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=200&h=200&fit=crop'); animation-delay: -1.3s; }
+        .flower:nth-child(14) { background-image: url('https://images.unsplash.com/photo-1424847651672-bf20a4b0982b?w=200&h=200&fit=crop'); animation-delay: -1.4s; }
+        .flower:nth-child(15) { background-image: url('https://images.unsplash.com/photo-1551063008-2de45cba6b52?w=200&h=200&fit=crop'); animation-delay: -1.5s; }
+        .flower:nth-child(16) { background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'); animation-delay: -1.6s; }
+        .flower:nth-child(17) { background-image: url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=200&h=200&fit=crop'); animation-delay: -1.7s; }
+        .flower:nth-child(18) { background-image: url('https://images.unsplash.com/photo-1431794062232-2a99a5431c6c?w=200&h=200&fit=crop'); animation-delay: -1.8s; }
+        .flower:nth-child(19) { background-image: url('https://images.unsplash.com/photo-1420593248178-d88870618ca0?w=200&h=200&fit=crop'); animation-delay: -1.9s; }
+        .flower:nth-child(20) { background-image: url('https://images.unsplash.com/photo-1485378392826-5e64c9b1d978?w=200&h=200&fit=crop'); animation-delay: -2.0s; }
+        .flower:nth-child(n+21):nth-child(-n+40) { 
+            background-image: url('https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=200&h=200&fit=crop');
+            filter: hue-rotate(calc((n - 21) * 18deg)) saturate(1.3);
+        }
+        .flower:nth-child(n+41):nth-child(-n+60) { 
+            background-image: url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=200&h=200&fit=crop');
+            filter: hue-rotate(calc((n - 41) * 15deg)) brightness(1.2);
+        }
+        .flower:nth-child(n+61):nth-child(-n+80) { 
+            background-image: url('https://images.unsplash.com/photo-1463320726281-696a485928c7?w=200&h=200&fit=crop');
+            filter: hue-rotate(calc((n - 61) * 12deg)) sepia(0.2);
+        }
+
+        @keyframes flowerSway {
+            0%, 100% { 
+                transform: rotate(-8deg) scale(1) translateY(0px); 
+                filter: hue-rotate(0deg) brightness(1);
+            }
+            25% { 
+                transform: rotate(3deg) scale(1.05) translateY(-5px); 
+                filter: hue-rotate(15deg) brightness(1.1);
+            }
+            50% { 
+                transform: rotate(8deg) scale(1.1) translateY(-10px); 
+                filter: hue-rotate(30deg) brightness(1.2);
+            }
+            75% { 
+                transform: rotate(-3deg) scale(1.05) translateY(-5px); 
+                filter: hue-rotate(15deg) brightness(1.1);
+            }
+        }
+
+        @keyframes flowerBloom {
+            0%, 100% { transform: scale(1); filter: brightness(1); }
+            50% { transform: scale(1.2); filter: brightness(1.3); }
+        }
+
+        /* Add floating petals effect */
+        .page3::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255,182,193,0.8);
+            border-radius: 50%;
+            animation: petalFloat 6s linear infinite;
+            top: -10px;
+            left: 20%;
+        }
+
+        @keyframes petalFloat {
+            0% { 
+                transform: translateY(-10px) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            10% { 
+                opacity: 1;
+            }
+            90% { 
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        .final-message {
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
+            margin-top: 2rem;
+            font-weight: bold;
+            animation: messageGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes messageGlow {
+            from { 
+                text-shadow: 0 0 20px rgba(255,255,255,0.8);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 30px rgba(255,255,255,1), 0 0 60px rgba(255,182,193,0.9);
+                transform: scale(1.02);
+            }
+        }
+
+        .heart-final {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin: 2rem auto;
+            animation: heartBeat 1.5s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(255,20,147,0.8));
+        }
+
+        .heart-final::before,
+        .heart-final::after {
+            content: '';
+            width: 50px;
+            height: 80px;
+            position: absolute;
+            left: 50px;
+            transform-origin: 0 100%;
+            background: linear-gradient(45deg, #ff1744, #ff6b9d, #ff1744);
+            border-radius: 50px 50px 0 0;
+            transform: rotate(-45deg);
+            animation: heartColorShift 3s ease-in-out infinite;
+        }
+
+        .heart-final::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        @keyframes heartBeat {
+            0%, 20%, 40%, 60%, 80%, 100% { transform: scale(1); }
+            10%, 30%, 50%, 70% { transform: scale(1.1); }
+        }
+
+        @keyframes heartColorShift {
+            0%, 100% { background: linear-gradient(45deg, #ff1744, #ff6b9d, #ff1744); }
+            33% { background: linear-gradient(45deg, #ff6b9d, #c44569, #ff6b9d); }
+            66% { background: linear-gradient(45deg, #c44569, #ff1744, #c44569); }
+        }
+
+        .next-btn {
+            background: linear-gradient(45deg, #54a0ff, #2e86de);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(84,160,255,0.4);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(84,160,255,0.6);
+        }
+
+        /* Sparkles */
+        .sparkles {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+            border-radius: 50%;
+            animation: sparkleFloat 3s ease-in-out infinite;
+            box-shadow: 0 0 15px #fff, 0 0 30px #ff6b9d;
+        }
+
+        @keyframes sparkleFloat {
+            0%, 100% {
+                transform: translateY(0px) scale(0.5) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-20px) scale(1) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .birthday-title, .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .final-message {
+                font-size: 1.8rem;
+            }
+            
+            .chocolates-grid, .flowers-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+                max-height: 50vh;
+            }
+            
+            .chocolate {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .flower {
+                width: 60px;
+                height: 60px;
+            }
+
+            .chocolate::after, .flower::after {
+                font-size: 0.6rem;
+                padding: 2px 4px;
+                bottom: -25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .birthday-title, .page-title {
+                font-size: 2rem;
+            }
+            
+            .chocolates-grid, .flowers-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+                max-height: 45vh;
+                padding: 0.5rem;
+            }
+            
+            .chocolate {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .flower {
+                width: 50px;
+                height: 50px;
+            }
+
+            .chocolate::after, .flower::after {
+                font-size: 0.5rem;
+                padding: 1px 3px;
+                bottom: -20px;
+            }
+        }
+
+        /* Scrollbar styling for better UX */
+        .chocolates-grid::-webkit-scrollbar, .flowers-grid::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chocolates-grid::-webkit-scrollbar-track, .flowers-grid::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .chocolates-grid::-webkit-scrollbar-thumb, .flowers-grid::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+        }
+
+        .chocolates-grid::-webkit-scrollbar-thumb:hover, .flowers-grid::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="canvas"></div>
+    
+    <div class="sparkles">
+        <div class="sparkle" style="top: 10%; left: 10%; animation-delay: -0.5s;"></div>
+        <div class="sparkle" style="top: 20%; left: 80%; animation-delay: -1s;"></div>
+        <div class="sparkle" style="top: 30%; left: 20%; animation-delay: -1.5s;"></div>
+        <div class="sparkle" style="top: 40%; left: 90%; animation-delay: -2s;"></div>
+        <div class="sparkle" style="top: 50%; left: 15%; animation-delay: -2.5s;"></div>
+        <div class="sparkle" style="top: 60%; left: 75%; animation-delay: -3s;"></div>
+        <div class="sparkle" style="top: 70%; left: 30%; animation-delay: -3.5s;"></div>
+        <div class="sparkle" style="top: 80%; left: 85%; animation-delay: -4s;"></div>
+        <div class="sparkle" style="top: 90%; left: 50%; animation-delay: -4.5s;"></div>
+    </div>
+
+    <!-- Page 1: Birthday Greeting -->
+    <div class="page page1 active">
+        <h1 class="birthday-title">Happy Birthday Pandu!</h1>
+        <button class="surprise-btn" onclick="nextPage()">Want to See a Surprise? 🎁</button>
+    </div>
+
+    <!-- Page 2: Chocolates -->
+    <div class="page page2">
+        <h2 class="page-title">Sweet Treats for You! 🍫</h2>
+        <div class="chocolates-grid">
+            <div class="chocolate" data-name="Dark Chocolate Truffle"></div>
+            <div class="chocolate" data-name="Milk Chocolate Bar"></div>
+            <div class="chocolate" data-name="White Chocolate Square"></div>
+            <div class="chocolate" data-name="Hazelnut Chocolate"></div>
+            <div class="chocolate" data-name="Almond Chocolate"></div>
+            <div class="chocolate" data-name="Caramel Chocolate"></div>
+            <div class="chocolate" data-name="Dark Chocolate Bar"></div>
+            <div class="chocolate" data-name="Chocolate Bonbon"></div>
+            <div class="chocolate" data-name="Chocolate Praline"></div>
+            <div class="chocolate" data-name="Cocoa Chocolate"></div>
+            <div class="chocolate" data-name="Swiss Chocolate"></div>
+            <div class="chocolate" data-name="Belgian Chocolate"></div>
+            <div class="chocolate" data-name="Chocolate Ganache"></div>
+            <div class="chocolate" data-name="Mint Chocolate"></div>
+            <div class="chocolate" data-name="Orange Chocolate"></div>
+            <div class="chocolate" data-name="Raspberry Chocolate"></div>
+            <div class="chocolate" data-name="Coffee Chocolate"></div>
+            <div class="chocolate" data-name="Vanilla Chocolate"></div>
+            <div class="chocolate" data-name="Strawberry Chocolate"></div>
+            <div class="chocolate" data-name="Cherry Chocolate"></div>
+            <div class="chocolate" data-name="Coconut Chocolate"></div>
+            <div class="chocolate" data-name="Peanut Chocolate"></div>
+            <div class="chocolate" data-name="Walnut Chocolate"></div>
+            <div class="chocolate" data-name="Pistachio Chocolate"></div>
+            <div class="chocolate" data-name="Cashew Chocolate"></div>
+            <div class="chocolate" data-name="Macadamia Chocolate"></div>
+            <div class="chocolate" data-name="Pecan Chocolate"></div>
+            <div class="chocolate" data-name="Brazil Nut Chocolate"></div>
+            <div class="chocolate" data-name="Pine Nut Chocolate"></div>
+            <div class="chocolate" data-name="Sesame Chocolate"></div>
+            <div class="chocolate" data-name="Sunflower Chocolate"></div>
+            <div class="chocolate" data-name="Pumpkin Seed Chocolate"></div>
+            <div class="chocolate" data-name="Chia Seed Chocolate"></div>
+            <div class="chocolate" data-name="Quinoa Chocolate"></div>
+            <div class="chocolate" data-name="Oat Chocolate"></div>
+            <div class="chocolate" data-name="Rye Chocolate"></div>
+            <div class="chocolate" data-name="Buckwheat Chocolate"></div>
+            <div class="chocolate" data-name="Amaranth Chocolate"></div>
+            <div class="chocolate" data-name="Millet Chocolate"></div>
+            <div class="chocolate" data-name="Teff Chocolate"></div>
+            <div class="chocolate" data-name="Honey Chocolate"></div>
+            <div class="chocolate" data-name="Maple Chocolate"></div>
+            <div class="chocolate" data-name="Agave Chocolate"></div>
+            <div class="chocolate" data-name="Stevia Chocolate"></div>
+            <div class="chocolate" data-name="Xylitol Chocolate"></div>
+            <div class="chocolate" data-name="Erythritol Chocolate"></div>
+            <div class="chocolate" data-name="Monk Fruit Chocolate"></div>
+            <div class="chocolate" data-name="Date Chocolate"></div>
+            <div class="chocolate" data-name="Fig Chocolate"></div>
+            <div class="chocolate" data-name="Apricot Chocolate"></div>
+            <div class="chocolate" data-name="Peach Chocolate"></div>
+            <div class="chocolate" data-name="Plum Chocolate"></div>
+            <div class="chocolate" data-name="Grape Chocolate"></div>
+            <div class="chocolate" data-name="Apple Chocolate"></div>
+            <div class="chocolate" data-name="Pear Chocolate"></div>
+            <div class="chocolate" data-name="Banana Chocolate"></div>
+            <div class="chocolate" data-name="Mango Chocolate"></div>
+            <div class="chocolate" data-name="Pineapple Chocolate"></div>
+            <div class="chocolate" data-name="Papaya Chocolate"></div>
+            <div class="chocolate" data-name="Kiwi Chocolate"></div>
+            <div class="chocolate" data-name="Passion Fruit Chocolate"></div>
+            <div class="chocolate" data-name="Lemon Chocolate"></div>
+            <div class="chocolate" data-name="Lime Chocolate"></div>
+            <div class="chocolate" data-name="Grapefruit Chocolate"></div>
+            <div class="chocolate" data-name="Tangerine Chocolate"></div>
+            <div class="chocolate" data-name="Mandarin Chocolate"></div>
+            <div class="chocolate" data-name="Clementine Chocolate"></div>
+            <div class="chocolate" data-name="Blood Orange Chocolate"></div>
+            <div class="chocolate" data-name="Bergamot Chocolate"></div>
+            <div class="chocolate" data-name="Earl Grey Chocolate"></div>
+            <div class="chocolate" data-name="Green Tea Chocolate"></div>
+            <div class="chocolate" data-name="Black Tea Chocolate"></div>
+            <div class="chocolate" data-name="Chai Chocolate"></div>
+            <div class="chocolate" data-name="Rooibos Chocolate"></div>
+            <div class="chocolate" data-name="Chamomile Chocolate"></div>
+            <div class="chocolate" data-name="Lavender Chocolate"></div>
+            <div class="chocolate" data-name="Rose Chocolate"></div>
+            <div class="chocolate" data-name="Jasmine Chocolate"></div>
+            <div class="chocolate" data-name="Hibiscus Chocolate"></div>
+            <div class="chocolate" data-name="Elderflower Chocolate"></div>
+            <div class="chocolate" data-name="Violet Chocolate"></div>
+            <div class="chocolate" data-name="Geranium Chocolate"></div>
+            <div class="chocolate" data-name="Thyme Chocolate"></div>
+            <div class="chocolate" data-name="Rosemary Chocolate"></div>
+            <div class="chocolate" data-name="Sage Chocolate"></div>
+            <div class="chocolate" data-name="Basil Chocolate"></div>
+            <div class="chocolate" data-name="Mint Chocolate"></div>
+            <div class="chocolate" data-name="Oregano Chocolate"></div>
+            <div class="chocolate" data-name="Tarragon Chocolate"></div>
+            <div class="chocolate" data-name="Dill Chocolate"></div>
+            <div class="chocolate" data-name="Fennel Chocolate"></div>
+            <div class="chocolate" data-name="Anise Chocolate"></div>
+            <div class="chocolate" data-name="Cardamom Chocolate"></div>
+            <div class="chocolate" data-name="Cinnamon Chocolate"></div>
+            <div class="chocolate" data-name="Nutmeg Chocolate"></div>
+            <div class="chocolate" data-name="Clove Chocolate"></div>
+            <div class="chocolate" data-name="Allspice Chocolate"></div>
+            <div class="chocolate" data-name="Star Anise Chocolate"></div>
+            <div class="chocolate" data-name="Black Pepper Chocolate"></div>
+            <div class="chocolate" data-name="White Pepper Chocolate"></div>
+            <div class="chocolate" data-name="Pink Pepper Chocolate"></div>
+            <div class="chocolate" data-name="Sichuan Pepper Chocolate"></div>
+            <div class="chocolate" data-name="Cayenne Chocolate"></div>
+            <div class="chocolate" data-name="Paprika Chocolate"></div>
+            <div class="chocolate" data-name="Chili Chocolate"></div>
+            <div class="chocolate" data-name="Chipotle Chocolate"></div>
+        </div>
+        <button class="next-btn" onclick="nextPage()">More Surprises Ahead! 🌸</button>
+    </div>
+
+    <!-- Page 3: Flowers & Final Message -->
+    <div class="page page3">
+        <h2 class="page-title">Beautiful Flowers for You! 🌺</h2>
+        <div class="flowers-grid">
+            <div class="flower" data-flower="Red Rose"></div>
+            <div class="flower" data-flower="Yellow Rose"></div>
+            <div class="flower" data-flower="White Rose"></div>
+            <div class="flower" data-flower="Pink Rose"></div>
+            <div class="flower" data-flower="Orange Rose"></div>
+            <div class="flower" data-flower="Purple Rose"></div>
+            <div class="flower" data-flower="Blue Rose"></div>
+            <div class="flower" data-flower="Black Rose"></div>
+            <div class="flower" data-flower="White Daisy"></div>
+            <div class="flower" data-flower="Yellow Daisy"></div>
+            <div class="flower" data-flower="Pink Daisy"></div>
+            <div class="flower" data-flower="Red Tulip"></div>
+            <div class="flower" data-flower="Yellow Tulip"></div>
+            <div class="flower" data-flower="White Tulip"></div>
+            <div class="flower" data-flower="Pink Tulip"></div>
+            <div class="flower" data-flower="Purple Tulip"></div>
+            <div class="flower" data-flower="Orange Tulip"></div>
+            <div class="flower" data-flower="Black Tulip"></div>
+            <div class="flower" data-flower="White Lily"></div>
+            <div class="flower" data-flower="Pink Lily"></div>
+            <div class="flower" data-flower="Yellow Lily"></div>
+            <div class="flower" data-flower="Orange Lily"></div>
+            <div class="flower" data-flower="Red Lily"></div>
+            <div class="flower" data-flower="Purple Lily"></div>
+            <div class="flower" data-flower="Tiger Lily"></div>
+            <div class="flower" data-flower="Easter Lily"></div>
+            <div class="flower" data-flower="Calla Lily"></div>
+            <div class="flower" data-flower="Water Lily"></div>
+            <div class="flower" data-flower="Sunflower"></div>
+            <div class="flower" data-flower="Small Sunflower"></div>
+            <div class="flower" data-flower="Red Sunflower"></div>
+            <div class="flower" data-flower="Orange Sunflower"></div>
+            <div class="flower" data-flower="Yellow Sunflower"></div>
+            <div class="flower" data-flower="Mammoth Sunflower"></div>
+            <div class="flower" data-flower="Blue Hydrangea"></div>
+            <div class="flower" data-flower="Pink Hydrangea"></div>
+            <div class="flower" data-flower="White Hydrangea"></div>
+            <div class="flower" data-flower="Purple Hydrangea"></div>
+            <div class="flower" data-flower="Green Hydrangea"></div>
+            <div class="flower" data-flower="Red Carnation"></div>
+            <div class="flower" data-flower="Pink Carnation"></div>
+            <div class="flower" data-flower="White Carnation"></div>
+            <div class="flower" data-flower="Yellow Carnation"></div>
+            <div class="flower" data-flower="Purple Carnation"></div>
+            <div class="flower" data-flower="Orange Carnation"></div>
+            <div class="flower" data-flower="Green Carnation"></div>
+            <div class="flower" data-flower="Blue Iris"></div>
+            <div class="flower" data-flower="Purple Iris"></div>
+            <div class="flower" data-flower="Yellow Iris"></div>
+            <div class="flower" data-flower="White Iris"></div>
+            <div class="flower" data-flower="Black Iris"></div>
+            <div class="flower" data-flower="Red Peony"></div>
+            <div class="flower" data-flower="Pink Peony"></div>
+            <div class="flower" data-flower="White Peony"></div>
+            <div class="flower" data-flower="Yellow Peony"></div>
+            <div class="flower" data-flower="Coral Peony"></div>
+            <div class="flower" data-flower="Red Poppy"></div>
+            <div class="flower" data-flower="Orange Poppy"></div>
+            <div class="flower" data-flower="Yellow Poppy"></div>
+            <div class="flower" data-flower="White Poppy"></div>
+            <div class="flower" data-flower="Pink Poppy"></div>
+            <div class="flower" data-flower="Purple Poppy"></div>
+            <div class="flower" data-flower="Blue Orchid"></div>
+            <div class="flower" data-flower="Purple Orchid"></div>
+            <div class="flower" data-flower="White Orchid"></div>
+            <div class="flower" data-flower="Pink Orchid"></div>
+            <div class="flower" data-flower="Yellow Orchid"></div>
+            <div class="flower" data-flower="Green Orchid"></div>
+            <div class="flower" data-flower="Red Orchid"></div>
+            <div class="flower" data-flower="Orange Orchid"></div>
+            <div class="flower" data-flower="Black Orchid"></div>
+            <div class="flower" data-flower="Dendrobium Orchid"></div>
+            <div class="flower" data-flower="Phalaenopsis Orchid"></div>
+            <div class="flower" data-flower="Cattleya Orchid"></div>
+            <div class="flower" data-flower="Vanda Orchid"></div>
+            <div class="flower" data-flower="Oncidium Orchid"></div>
+            <div class="flower" data-flower="Cymbidium Orchid"></div>
+            <div class="flower" data-flower="Paphiopedilum Orchid"></div>
+            <div class="flower" data-flower="Miltonia Orchid"></div>
+            <div class="flower" data-flower="Brassia Orchid"></div>
+            <div class="flower" data-flower="Zygopetalum Orchid"></div>
+            <div class="flower" data-flower="Odontoglossum Orchid"></div>
+        </div>
+        <div class="final-message">
+            Have a Nice Day<br>
+            & Sweet Dreams! 💕
+        </div>
+        <div class="heart-final"></div>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+
+        function nextPage() {
+            if (currentPage < pages.length - 1) {
+                pages[currentPage].classList.remove('active');
+                pages[currentPage].classList.add('prev');
+                
+                currentPage++;
+                
+                setTimeout(() => {
+                    pages[currentPage].classList.add('active');
+                }, 100);
+            }
+        }
+
+        // Add more dynamic sparkles
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = Math.random() * 100 + '%';
+            sparkle.style.top = Math.random() * 100 + '%';
+            sparkle.style.animationDelay = Math.random() * 3 + 's';
+            
+            const colors = ['#fff', '#ff6b9d', '#feca57', '#54a0ff', '#5f27cd'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            sparkle.style.boxShadow = `0 0 15px ${color}, 0 0 30px ${color}`;
+            
+            document.querySelector('.sparkles').appendChild(sparkle);
+            
+            setTimeout(() => {
+                if(sparkle.parentNode) sparkle.remove();
+            }, 3000);
+        }
+
+        // Create sparkles continuously
+        setInterval(createSparkle, 800);
+    </script>
+</body>
+</html>
