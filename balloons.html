@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎈 Floating Balloons - Birthday Celebration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        .title {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            z-index: 100;
+            animation: titleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .balloon {
+            position: absolute;
+            bottom: -150px;
+            width: 80px;
+            height: 100px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            animation: float-up linear infinite;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 150px;
+            background: rgba(255,255,255,0.5);
+        }
+
+        .balloon::after {
+            content: '▼';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+        }
+
+        @keyframes float-up {
+            0% {
+                bottom: -150px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                bottom: 110vh;
+                opacity: 0;
+            }
+        }
+
+        .balloon.wobble-1 {
+            animation: float-up linear infinite, wobble-1 4s ease-in-out infinite;
+        }
+
+        .balloon.wobble-2 {
+            animation: float-up linear infinite, wobble-2 3s ease-in-out infinite;
+        }
+
+        @keyframes wobble-1 {
+            0%, 100% { transform: translateX(0) rotate(-5deg); }
+            50% { transform: translateX(20px) rotate(5deg); }
+        }
+
+        @keyframes wobble-2 {
+            0%, 100% { transform: translateX(0) rotate(5deg); }
+            50% { transform: translateX(-20px) rotate(-5deg); }
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">🎈 Happy Birthday! 🎈</h1>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="location.href='index.html'">🏠 Home</button>
+        <button class="nav-btn" onclick="location.href='confetti.html'">🎊 Confetti</button>
+        <button class="nav-btn" onclick="location.href='fireworks.html'">🎆 Fireworks</button>
+        <button class="nav-btn" onclick="location.href='cake.html'">🎂 Cake</button>
+        <button class="nav-btn" onclick="location.href='stars.html'">⭐ Stars</button>
+    </div>
+
+    <script>
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2', '#F8B500', '#FF69B4'];
+        
+        function createBalloon() {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon ' + (Math.random() > 0.5 ? 'wobble-1' : 'wobble-2');
+            balloon.style.left = Math.random() * 100 + '%';
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.animationDuration = (8 + Math.random() * 7) + 's';
+            balloon.style.animationDelay = Math.random() * 3 + 's';
+            
+            document.body.appendChild(balloon);
+            
+            setTimeout(() => balloon.remove(), 18000);
+        }
+
+        // Create balloons continuously
+        setInterval(createBalloon, 300);
+        
+        // Create initial batch
+        for(let i = 0; i < 20; i++) {
+            setTimeout(createBalloon, i * 200);
+        }
+    </script>
+</body>
+</html>

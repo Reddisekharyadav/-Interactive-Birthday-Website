@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎆 Fireworks Spectacular - Birthday Celebration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #0a0a2e 0%, #16213e 50%, #1a1a3e 100%);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        .title {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #FFD700;
+            font-size: 3.5em;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 4px 4px 8px rgba(0,0,0,0.8);
+            z-index: 100;
+            animation: glow 2s ease-in-out infinite;
+            text-align: center;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 4px 4px 8px rgba(0,0,0,0.8); }
+            50% { text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6), 4px 4px 8px rgba(0,0,0,0.8); }
+        }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            font-weight: bold;
+            color: #FFD700;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.4);
+            background: rgba(255, 215, 0, 0.4);
+            border-color: #FFD700;
+        }
+
+        .click-prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 215, 0, 0.8);
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: blink 2s ease-in-out infinite;
+            z-index: 50;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">🎆 Fireworks Show! 🎆</h1>
+    <div class="click-prompt">Click anywhere to launch fireworks! 🚀</div>
+    <canvas id="fireworks"></canvas>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="location.href='index.html'">🏠 Home</button>
+        <button class="nav-btn" onclick="location.href='balloons.html'">🎈 Balloons</button>
+        <button class="nav-btn" onclick="location.href='confetti.html'">🎊 Confetti</button>
+        <button class="nav-btn" onclick="location.href='cake.html'">🎂 Cake</button>
+        <button class="nav-btn" onclick="location.href='stars.html'">⭐ Stars</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 2 + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
+                };
+                this.alpha = 1;
+                this.decay = Math.random() * 0.02 + 0.01;
+                this.gravity = 0.05;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.closePath();
+                
+                // Add glow effect
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.restore();
+            }
+
+            update() {
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+            }
+        }
+
+        class Firework {
+            constructor(x, y, targetY) {
+                this.x = x;
+                this.y = y;
+                this.targetY = targetY;
+                this.particles = [];
+                this.exploded = false;
+                this.velocity = -8;
+                this.color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+            }
+
+            draw() {
+                if (!this.exploded) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
+                    
+                    // Trail effect
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x, this.y + 10);
+                    ctx.strokeStyle = this.color;
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.closePath();
+                } else {
+                    this.particles.forEach(particle => particle.draw());
+                }
+            }
+
+            update() {
+                if (!this.exploded) {
+                    this.y += this.velocity;
+                    if (this.y <= this.targetY) {
+                        this.explode();
+                    }
+                } else {
+                    this.particles.forEach((particle, index) => {
+                        particle.update();
+                        if (particle.alpha <= 0) {
+                            this.particles.splice(index, 1);
+                        }
+                    });
+                }
+            }
+
+            explode() {
+                this.exploded = true;
+                const particleCount = Math.random() * 50 + 100;
+                const colors = [
+                    this.color,
+                    `hsl(${(parseInt(this.color.match(/\d+/)[0]) + 30) % 360}, 100%, 60%)`,
+                    `hsl(${(parseInt(this.color.match(/\d+/)[0]) + 60) % 360}, 100%, 60%)`
+                ];
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    this.particles.push(new Particle(this.x, this.y, color));
+                }
+            }
+
+            isDone() {
+                return this.exploded && this.particles.length === 0;
+            }
+        }
+
+        const fireworks = [];
+
+        function launchFirework(x) {
+            const targetY = Math.random() * canvas.height * 0.3 + canvas.height * 0.1;
+            fireworks.push(new Firework(x, canvas.height, targetY));
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 46, 0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            fireworks.forEach((firework, index) => {
+                firework.update();
+                firework.draw();
+                
+                if (firework.isDone()) {
+                    fireworks.splice(index, 1);
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Auto launch fireworks
+        setInterval(() => {
+            if (Math.random() < 0.8) {
+                const x = Math.random() * canvas.width;
+                launchFirework(x);
+            }
+        }, 800);
+
+        // Click to launch firework
+        canvas.addEventListener('click', (e) => {
+            launchFirework(e.clientX);
+        });
+
+        // Initial fireworks
+        setTimeout(() => launchFirework(canvas.width * 0.3), 500);
+        setTimeout(() => launchFirework(canvas.width * 0.5), 800);
+        setTimeout(() => launchFirework(canvas.width * 0.7), 1100);
+
+        animate();
+    </script>
+</body>
+</html>

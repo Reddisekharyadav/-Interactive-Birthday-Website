@@ -95,6 +95,17 @@
             50% { transform: scale(1.05); }
         }
 
+        @keyframes rainbow-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 15px 40px rgba(255,107,157,0.4);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 0 20px 60px rgba(255,105,180,0.8), 0 0 30px rgba(255,182,193,0.6);
+            }
+        }
+
         .surprise-btn:hover {
             transform: translateY(-5px) scale(1.1);
             box-shadow: 0 20px 50px rgba(255,107,157,0.6);
@@ -676,7 +687,16 @@
     <!-- Page 1: Birthday Greeting -->
     <div class="page page1 active">
         <h1 class="birthday-title">Happy Birthday Pandu!</h1>
-        <button class="surprise-btn" onclick="nextPage()">Want to See a Surprise? 🎁</button>
+        
+        <button class="surprise-btn" onclick="nextPage()">Want to See More? 🎁</button>
+        
+        <div style="margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+            <button class="surprise-btn" style="font-size: 1.2rem; padding: 15px 30px;" onclick="location.href='balloons.html'">🎈 Balloons</button>
+            <button class="surprise-btn" style="font-size: 1.2rem; padding: 15px 30px;" onclick="location.href='confetti.html'">🎊 Confetti</button>
+            <button class="surprise-btn" style="font-size: 1.2rem; padding: 15px 30px;" onclick="location.href='fireworks.html'">🎆 Fireworks</button>
+            <button class="surprise-btn" style="font-size: 1.2rem; padding: 15px 30px;" onclick="location.href='cake.html'">🎂 Cake</button>
+            <button class="surprise-btn" style="font-size: 1.2rem; padding: 15px 30px;" onclick="location.href='stars.html'">⭐ Stars</button>
+        </div>
     </div>
 
     <!-- Page 2: Chocolates -->
